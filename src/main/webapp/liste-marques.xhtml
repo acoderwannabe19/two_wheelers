@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 08/06/2023
+  Time: 20:52
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+    <style>
+        body {
+        background-color: #000000 ;
+        }
+        .card {
+        background-color: #1b1b1b;
+
+        }
+        .marque-list-item {
+            margin-left: 10px;
+            border-radius: 50px;
+        }
+
+    </style>
+</h:head>
+
+<h:body>
+    <h:form id="form">
+        <p:growl id="messages" showDetail="true" />
+        <p:menubar >
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('accueil.xhtml')}" style="font-weight: bolder; font-size: 24px; margin-right: 25px"  value="TwoWheelers" />
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('produits.xhtml')}" value="Products" icon="pi pi-fw pi-tags"/>
+            <p:submenu label="Stakeholders" icon="pi pi-fw pi-user">
+                <p:menuitem value="Clients" action="#{navigationBean.navigateToAnotherPage('clients.xhtml')}" />
+                <p:menuitem value="Employees" action="#{navigationBean.navigateToAnotherPage('employes.xhtml')}"/>
+            </p:submenu>
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('commandes.xhtml')}" value="Orders" icon="pi pi-fw pi-shopping-cart"/>
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('articles-commande.xhtml')}" value="Articles" icon="pi pi-fw pi-shopping-bag"/>
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-stocks.xhtml')}" value="Stocks" icon="pi pi-fw pi-box"/>
+
+            <p:submenu >
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-marques.xhtml')}" value="Brands" icon="pi pi-fw pi-star-fill"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-categories.xhtml')}" value="Categories" icon="pi pi-fw pi-microsoft"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('magasins.xhtml')}" value="Stores" icon="pi pi-fw pi-shopping-bag"/>
+            </p:submenu>
+            <p:divider layout="vertical"/>
+
+            <f:facet name="options">
+                <div style="margin-top: 8px">
+                    <div class="ui-input-icon-left mr-2">
+                        <p:graphicImage style="border-radius: 50px;  width: 30px; height: 30px;margin-bottom: 5px" url="https://e0.pxfuel.com/wallpapers/66/901/desktop-wallpaper-fractal-background-abyss-dark-fractal.jpg"></p:graphicImage>
+                    </div>
+
+                    <p:button style="margin-left: 10px;" value="Logout" styleClass="ui-button-outlined ui-button-warning" icon="pi pi-fw pi-sign-out"/>
+                    <p:button icon="pi pi-instagram" styleClass="rounded-button ui-button-help ui-button-flat" />
+                    <p:button icon="pi pi-facebook" styleClass="rounded-button ui-button-info ui-button-flat" />
+                    <p:button icon="pi pi-whatsapp" styleClass="rounded-button ui-button-success ui-button-flat" />
+                </div>
+            </f:facet>
+        </p:menubar>
+
+        <p:toolbar>
+            <p:toolbarGroup>
+                <p:commandButton value="Add a new brand" icon="pi pi-plus" action="ajout-marque.xhtml"
+                                 styleClass="ui-button-outlined ui-button-success" style="margin-right: .5rem">
+                </p:commandButton>
+            </p:toolbarGroup>
+
+        </p:toolbar>
+
+        <p:dataView id="dv-marques" widgetVar="dtProducts" var="marque" value="#{delMarqueMBean.marques}" rows="12" paginator="true" rowKey="#{marque.id}"
+                    rowsPerPageTemplate="6,12,16" paginatorPosition="bottom" selection="#{delMarqueMBean.selectedMarques}" reflow="true"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    gridIcon="pi pi-th-large" listIcon="pi pi-bars" >
+
+            <p:dataViewGridItem>
+                <div class="marque-grid-item card border-1">
+                    <div class="product-grid-item-content" style="text-align: center">
+                        <h:outputText value="#{marque.id}" styleClass="marque-id">
+                        </h:outputText>
+                    </div>
+                    <div class="marque-grid-item-bottom" style="text-align: center">
+
+                        <i class="pi pi-tag marque-category-icon"/><h:outputText value="  #{marque.nom}" styleClass="marque-nom">
+                    </h:outputText><br/>
+                        <p:commandButton  style="margin: 5px" styleClass="ui-button-raised ui-button-secondary ui-button-flat" icon="pi pi-pencil"
+                                          action="modif-marque.xhtml">
+                        </p:commandButton>
+                        <p:commandButton style="margin: 5px" class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                         process="@this"
+                                         oncomplete="PF('deleteMarqueDialog').show()">
+                            <f:setPropertyActionListener value="#{marque}" target="#{delMarqueMBean.selectedMarque}" />
+                        </p:commandButton>
+
+                    </div>
+                </div>
+            </p:dataViewGridItem>
+
+            <p:dataViewListItem>
+                <div style="margin: 5px" class="marque-grid-item card border-1">
+                    <div class="marque-list-item">
+                        <div class="marque-list-detail">
+                            <div class="marque-id">#{marque.id} </div>
+                        </div>
+                        <div class="marque-list-action"><i class="pi pi-tag marque-category-icon"/><h:outputText value="   #{marque.nom}" styleClass="marque-nom">
+                        </h:outputText>
+                        </div>
+                        <div align="right">
+                            <p:commandButton  style="margin: 5px" styleClass="ui-button-raised ui-button-secondary ui-button-flat" icon="pi pi-pencil"
+                                              action="modif-marque.xhtml">
+                                <f:setPropertyActionListener value="#{marque}" target="#{delMarqueMBean.selectedMarque}" />
+                            </p:commandButton>
+                            <p:commandButton style="margin: 5px" class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                             process="@this"
+                                             oncomplete="PF('deleteMarqueDialog').show()">
+                                <f:setPropertyActionListener value="#{marque}" target="#{delMarqueMBean.selectedMarque}" />
+                            </p:commandButton>
+                        </div>
+                    </div>
+                </div>
+            </p:dataViewListItem>
+        </p:dataView>
+    </h:form>
+    <h:form id="dialogs">
+        <p:confirmDialog widgetVar="deleteMarqueDialog" showEffect="fade" width="300"
+                         message="Delete the brand?" header="Confirm" severity="warn">
+            <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{delMarqueMBean.deleteMarque()}"
+                             process="@this"
+                             oncomplete="PF('deleteMarqueDialog').hide()" />
+            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                             onclick="PF('deleteMarqueDialog').hide()" />
+        </p:confirmDialog>
+
+        <p:confirmDialog global="true" showEffect="fade" width="300">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                             icon="pi pi-times" />
+        </p:confirmDialog>
+    </h:form>
+
+
+
+
+</h:body>
+
+</html>

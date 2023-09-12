@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 27/07/2023
+  Time: 10:51
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+
+    <style>
+        body {
+            background-color: #000000 ;
+        }
+        .card {
+            background-color: #1b1b1b;
+        }
+    </style>
+
+
+</h:head>
+<h:body>
+    <div class="card crud-demo">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            <p:menubar >
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('accueil.xhtml')}" style="font-weight: bolder; font-size: 24px; margin-right: 25px"  value="TwoWheelers" />
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('produits.xhtml')}" value="Products" icon="pi pi-fw pi-tags"/>
+                <p:submenu label="Stakeholders" icon="pi pi-fw pi-user">
+                    <p:menuitem value="Clients" action="#{navigationBean.navigateToAnotherPage('clients.xhtml')}" />
+                    <p:menuitem value="Employees" action="#{navigationBean.navigateToAnotherPage('employes.xhtml')}"/>
+                </p:submenu>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('commandes.xhtml')}" value="Orders" icon="pi pi-fw pi-shopping-cart"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('articles-commande.xhtml')}" value="Articles" icon="pi pi-fw pi-shopping-bag"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-stocks.xhtml')}" value="Stocks" icon="pi pi-fw pi-box"/>
+
+                <p:submenu >
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-marques.xhtml')}" value="Brands" icon="pi pi-fw pi-star-fill"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-categories.xhtml')}" value="Categories" icon="pi pi-fw pi-microsoft"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('magasins.xhtml')}" value="Stores" icon="pi pi-fw pi-shopping-bag"/>
+                </p:submenu>
+                <p:divider layout="vertical"/>
+
+                <f:facet name="options">
+                    <div style="margin-top: 8px">
+                        <div class="ui-input-icon-left mr-2">
+                            <p:graphicImage style="border-radius: 50px;  width: 30px; height: 30px;margin-bottom: 5px" url="https://e0.pxfuel.com/wallpapers/66/901/desktop-wallpaper-fractal-background-abyss-dark-fractal.jpg"></p:graphicImage>
+                        </div>
+
+                        <p:button style="margin-left: 10px;" value="Logout" styleClass="ui-button-outlined ui-button-warning" icon="pi pi-fw pi-sign-out"/>
+                        <p:button icon="pi pi-instagram" styleClass="rounded-button ui-button-help ui-button-flat" />
+                        <p:button icon="pi pi-facebook" styleClass="rounded-button ui-button-info ui-button-flat" />
+                        <p:button icon="pi pi-whatsapp" styleClass="rounded-button ui-button-success ui-button-flat" />
+                    </div>
+                </f:facet>
+            </p:menubar>
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Add a new employe" icon="pi pi-plus" action="ajout-employe.xhtml"
+                                     styleClass="ui-button-outlined ui-button-success" style="margin-right: .5rem">
+                    </p:commandButton>
+
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:commandButton id="delete-employes-button" value="#{delEmpMBean.deleteButtonMessage}"
+                                     icon="pi pi-trash" actionListener="#{delEmpMBean.deleteSelectedEmployes}"
+                                     styleClass="ui-button-outlined ui-button-danger" disabled="#{!delEmpMBean.hasSelectedEmployes()}" update="@this">
+                        <p:confirm header="Confirmation" message="Delete the selected employes?"
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable editable="true" id="dt-employes" widgetVar="dtEmployes" var="employe" value="#{delEmpMBean.employes}"
+                         reflow="true" styleClass="employes-table" selection="#{delEmpMBean.selectedEmployes}"
+                         rowKey="#{employe.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <p:ajax event="rowEdit" listener="#{modifEmpMBean.onRowEdit}" update=":form:messages"/>
+                <p:ajax event="rowEditCancel" listener="#{modifEmpMBean.onRowCancel}" update=":form:messages"/>
+
+                <f:facet name="header">
+                    <div align="right" class="employes-table-header">
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText  id="globalFilter" onkeyup="PF('dtEmployes').filter()" placeholder="Search for a employe" />
+                    </span>
+                    </div>
+                </f:facet>
+
+                <p:ajax event="rowSelect" update=":form:delete-employes-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-employes-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-employes-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-employes-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-employes-button" />
+
+                <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                <p:column headerText="Id" sortBy="#{employe.id}" filterBy="#{employe.id}">
+                    <h:outputText value="#{employe.id}" />
+                </p:column>
+                <p:column headerText="First name" sortBy="#{employe.prenom}" filterBy="#{employe.prenom}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.prenom}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.prenom}" style="width:100%" label="First name"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Last name" sortBy="#{employe.nom}" filterBy="#{employe.nom}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.nom}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.nom}" style="width:100%" label="Last name"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Phone" sortBy="#{employe.telephone}" filterBy="#{employe.telephone}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.telephone}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.telephone}" style="width:100%" label="Phone"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Email" sortBy="#{employe.email}" filterBy="#{employe.email}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.email}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.email}" style="width:100%" label="Email"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Address" sortBy="#{employe.adresse}" filterBy="#{employe.adresse}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.adresse}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.adresse}" style="width:100%" label="Address"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Zip code" sortBy="#{employe.codeZip}" filterBy="#{employe.codeZip}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.codeZip}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.codeZip}" style="width:100%" label="Zip code"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="State" sortBy="#{employe.etat}" filterBy="#{employe.etat}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.etat}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.etat}" style="width:100%" label="State"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="City" sortBy="#{employe.ville}" filterBy="#{employe.ville}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.ville}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.ville}" style="width:100%" label="City"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Active" sortBy="#{employe.actif}" filterBy="#{employe.actif}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.actif}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{employe.actif}" style="width:100%" label="Active"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Store" sortBy="#{employe.magasinId.nom}" filterBy="#{employe.magasinId.nom}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.magasinId.nom}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu id="magasin" value="#{employe.magasinId}" converter="magasinConverter">
+                                <f:selectItems value="#{modifEmpMBean.magasins}" var="magasin"
+                                               itemLabel="#{magasin.nom}" itemValue="#{magasin}"  />
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Manager" sortBy="#{employe.managerId.nom}" filterBy="#{employe.managerId.nom}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{employe.managerId.nom}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu id="manager" value="#{employe.managerId}" converter="employeConverter">
+                                <f:selectItems value="#{modifEmpMBean.managers}" var="manager"
+                                               itemLabel="#{manager.nom}" itemValue="#{manager}"  />
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+
+                <p:column headerText="Actions" >
+                    <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                    <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                     process="@this"
+                                     oncomplete="PF('deleteEmployeDialog').show()">
+                        <f:setPropertyActionListener value="#{employe}" target="#{delEmpMBean.selectedEmploye}" />
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+        <h:form id="dialogs">
+            <p:confirmDialog widgetVar="deleteEmployeDialog" showEffect="fade" width="300"
+                             message="Delete the employe?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{delEmpMBean.deleteEmploye()}"
+                                 process="@this" update=":form:delete-employes-button"
+                                 oncomplete="PF('deleteEmployeDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteEmployeDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="pi pi-times" />
+            </p:confirmDialog>
+        </h:form>
+    </div>
+
+</h:body>
+</html>
+

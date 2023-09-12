@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 27/07/2023
+  Time: 12:02
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+
+    <style>
+        body {
+            background-color: #000000 ;
+        }
+        .card {
+            background-color: #1b1b1b;
+        }
+    </style>
+
+
+</h:head>
+<h:body>
+    <div class="card crud-demo">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            <p:menubar >
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('accueil.xhtml')}" style="font-weight: bolder; font-size: 24px; margin-right: 25px"  value="TwoWheelers" />
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('produits.xhtml')}" value="Products" icon="pi pi-fw pi-tags"/>
+                <p:submenu label="Stakeholders" icon="pi pi-fw pi-user">
+                    <p:menuitem value="Clients" action="#{navigationBean.navigateToAnotherPage('clients.xhtml')}" />
+                    <p:menuitem value="Employees" action="#{navigationBean.navigateToAnotherPage('employes.xhtml')}"/>
+                </p:submenu>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('commandes.xhtml')}" value="Orders" icon="pi pi-fw pi-shopping-cart"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('articles-commande.xhtml')}" value="Articles" icon="pi pi-fw pi-shopping-bag"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-stocks.xhtml')}" value="Stocks" icon="pi pi-fw pi-box"/>
+
+                <p:submenu >
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-marques.xhtml')}" value="Brands" icon="pi pi-fw pi-star-fill"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-categories.xhtml')}" value="Categories" icon="pi pi-fw pi-microsoft"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('magasins.xhtml')}" value="Stores" icon="pi pi-fw pi-shopping-bag"/>
+                </p:submenu>
+                <p:divider layout="vertical"/>
+
+                <f:facet name="options">
+                    <div style="margin-top: 8px">
+                        <div class="ui-input-icon-left mr-2">
+                            <p:graphicImage style="border-radius: 50px;  width: 30px; height: 30px;margin-bottom: 5px" url="https://e0.pxfuel.com/wallpapers/66/901/desktop-wallpaper-fractal-background-abyss-dark-fractal.jpg"></p:graphicImage>
+                        </div>
+
+                        <p:button style="margin-left: 10px;" value="Logout" styleClass="ui-button-outlined ui-button-warning" icon="pi pi-fw pi-sign-out"/>
+                        <p:button icon="pi pi-instagram" styleClass="rounded-button ui-button-help ui-button-flat" />
+                        <p:button icon="pi pi-facebook" styleClass="rounded-button ui-button-info ui-button-flat" />
+                        <p:button icon="pi pi-whatsapp" styleClass="rounded-button ui-button-success ui-button-flat" />
+                    </div>
+                </f:facet>
+            </p:menubar>
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Add a new store" icon="pi pi-plus" action="ajout-magasin.xhtml"
+                                     styleClass="ui-button-outlined ui-button-success" style="margin-right: .5rem">
+                    </p:commandButton>
+
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:commandButton id="delete-magasins-button" value="#{delMagasinMBean.deleteButtonMessage}"
+                                     icon="pi pi-trash" actionListener="#{delMagasinMBean.deleteSelectedMagasins}"
+                                     styleClass="ui-button-outlined ui-button-danger" disabled="#{!delMagasinMBean.hasSelectedMagasins()}" update="@this">
+                        <p:confirm header="Confirmation" message="Delete the selected stores?"
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable editable="true" id="dt-magasins" widgetVar="dtMagasins" var="magasin" value="#{delMagasinMBean.magasins}"
+                         reflow="true" styleClass="magasins-table" selection="#{delMagasinMBean.selectedMagasins}"
+                         rowKey="#{magasin.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <p:ajax event="rowEdit" listener="#{modifMagasinMBean.onRowEdit}" update=":form:messages"/>
+                <p:ajax event="rowEditCancel" listener="#{modifMagasinMBean.onRowCancel}" update=":form:messages"/>
+
+                <f:facet name="header">
+                    <div align="right" class="magasins-table-header">
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText  id="globalFilter" onkeyup="PF('dtMagasins').filter()" placeholder="Search for a store" />
+                    </span>
+                    </div>
+                </f:facet>
+
+                <p:ajax event="rowSelect" update=":form:delete-magasins-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-magasins-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-magasins-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-magasins-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-magasins-button" />
+
+                <p:column selectionMode="multiple" exportable="false"></p:column>
+
+<!--                <p:column headerText="Id" sortBy="#{magasin.id}" filterBy="#{magasin.id}">-->
+<!--                    <h:outputText value="#{magasin.id}" />-->
+<!--                </p:column>-->
+
+                <p:column headerText="Phone" sortBy="#{magasin.telephone}" filterBy="#{magasin.telephone}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{magasin.telephone}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{magasin.telephone}" style="width:100%" label="Phone"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Email" sortBy="#{magasin.email}" filterBy="#{magasin.email}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{magasin.email}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{magasin.email}" style="width:100%" label="Email"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Address" sortBy="#{magasin.adresse}" filterBy="#{magasin.adresse}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{magasin.adresse}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{magasin.adresse}" style="width:100%" label="Address"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Zip code" sortBy="#{magasin.codeZip}" filterBy="#{magasin.codeZip}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{magasin.codeZip}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{magasin.codeZip}" style="width:100%" label="Zip code"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="State" sortBy="#{magasin.etat}" filterBy="#{magasin.etat}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{magasin.etat}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{magasin.etat}" style="width:100%" label="State"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="City" sortBy="#{magasin.ville}" filterBy="#{magasin.ville}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{magasin.ville}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{magasin.ville}" style="width:100%" label="City"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Actions" >
+                    <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                    <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                     process="@this"
+                                     oncomplete="PF('deleteMagasinDialog').show()">
+                        <f:setPropertyActionListener value="#{magasin}" target="#{delMagasinMBean.selectedMagasin}" />
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+        <h:form id="dialogs">
+            <p:confirmDialog widgetVar="deleteMagasinDialog" showEffect="fade" width="300"
+                             message="Delete the magasin?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{delMagasinMBean.deleteMagasin()}"
+                                 process="@this" update=":form:delete-magasins-button"
+                                 oncomplete="PF('deleteMagasinDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteMagasinDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="pi pi-times" />
+            </p:confirmDialog>
+        </h:form>
+    </div>
+
+</h:body>
+</html>
+

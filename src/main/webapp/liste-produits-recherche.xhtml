@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 17/06/2023
+  Time: 08:03
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+</h:head>
+
+<h:body>
+
+    <f:view>
+        <h:outputText>Liste des Personnes</h:outputText>
+
+        <p:panelGrid columns="2">
+            <p:inputText value="#{listeProduitsMBean.searchKeyword}" placeholder="Rechercher..." />
+            <p:commandButton value="Rechercher" action="#{listeProduitsMBean.search()}" update="produitList" />
+        </p:panelGrid>
+
+        <p:dataView  gridIcon="pi pi-th-large" listIcon="pi pi-bars"  id="produitList" var="produit" value="#{listeProduitsMBean.produits}"  rows="10" paginator="true">
+        <p:dataViewGridItem>
+
+            <div class="produit-grid-item card border-1">
+                <div class="product-grid-item-content" style="text-align: center">
+                    <h:outputText value="#{produit.id}" styleClass="produit-id">
+                    </h:outputText>
+                </div>
+                <div class="produit-grid-item-bottom" style="text-align: center">
+                    <i class="pi pi-tag produit-category-icon"/><h:outputText value="  #{produit.nom}" styleClass="produit-nom">
+                </h:outputText>
+
+                </div>
+            </div>
+        </p:dataViewGridItem>
+
+        <p:dataViewListItem>
+            <div class="produit-list-item">
+
+                <div class="produit-list-detail">
+                    <div class="produit-id">#{produit.id}</div>
+
+                </div>
+                <div class="produit-list-action">
+                    <i class="pi pi-tag produit-category-icon"/><h:outputText value="  #{produit.nom}" styleClass="produit-nom">
+                </h:outputText>
+
+                </div>
+            </div>
+        </p:dataViewListItem>
+        </p:dataView>
+    </f:view>
+</h:body>
+
+</html>

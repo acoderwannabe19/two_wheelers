@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 15/06/2023
+  Time: 21:45
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+</h:head>
+
+<h:body>
+    <f:view>
+        <h:outputText>Liste des articles commandés </h:outputText>
+        <h:panelGrid columns="2">
+            <p:dataTable var="articleCommande" value="#{listeArticlesCommandeMBean.articleCommandes}" selectionMode="single" selection="#{listeArticlesCommandeMBean.articleCommandeChoisi}" rowKey="#{articleCommande.ligne}">
+                <p:column headerText="Ligne">
+                    <h:outputText value="#{articleCommande.ligne}"/>
+                </p:column>
+                <p:column headerText="Numéro de commande">
+                    <h:outputText value="#{articleCommande.numeroCommande.numero}"/>
+                </p:column>
+                <p:column headerText="Produit">
+                    <h:outputText value="#{articleCommande.produitId.nom}"/>
+                </p:column>
+            </p:dataTable>
+            <p:panel rendered="#{articleCommande}"/>
+
+        </h:panelGrid>
+    </f:view>
+</h:body>
+
+</html>

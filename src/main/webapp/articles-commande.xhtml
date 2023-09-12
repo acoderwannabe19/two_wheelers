@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 27/07/2023
+  Time: 13:27
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+
+    <style>
+        body {
+            background-color: #000000 ;
+        }
+        .card {
+            background-color: #1b1b1b;
+        }
+    </style>
+
+
+</h:head>
+<h:body>
+    <div class="card crud-demo">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            <p:menubar >
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('accueil.xhtml')}" style="font-weight: bolder; font-size: 24px; margin-right: 25px"  value="TwoWheelers" />
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('produits.xhtml')}" value="Products" icon="pi pi-fw pi-tags"/>
+                <p:submenu label="Stakeholders" icon="pi pi-fw pi-user">
+                    <p:menuitem value="Clients" action="#{navigationBean.navigateToAnotherPage('clients.xhtml')}" />
+                    <p:menuitem value="Employees" action="#{navigationBean.navigateToAnotherPage('employes.xhtml')}"/>
+                </p:submenu>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('commandes.xhtml')}" value="Orders" icon="pi pi-fw pi-shopping-cart"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('articles-commande.xhtml')}" value="Articles" icon="pi pi-fw pi-shopping-bag"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-stocks.xhtml')}" value="Stocks" icon="pi pi-fw pi-box"/>
+
+                <p:submenu >
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-marques.xhtml')}" value="Brands" icon="pi pi-fw pi-star-fill"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-categories.xhtml')}" value="Categories" icon="pi pi-fw pi-microsoft"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('magasins.xhtml')}" value="Stores" icon="pi pi-fw pi-shopping-bag"/>
+                </p:submenu>
+                <p:divider layout="vertical"/>
+
+                <f:facet name="options">
+                    <div style="margin-top: 8px">
+                        <div class="ui-input-icon-left mr-2">
+                            <p:graphicImage style="border-radius: 50px;  width: 30px; height: 30px;margin-bottom: 5px" url="https://e0.pxfuel.com/wallpapers/66/901/desktop-wallpaper-fractal-background-abyss-dark-fractal.jpg"></p:graphicImage>
+                        </div>
+
+                        <p:button style="margin-left: 10px;" value="Logout" styleClass="ui-button-outlined ui-button-warning" icon="pi pi-fw pi-sign-out"/>
+                        <p:button icon="pi pi-instagram" styleClass="rounded-button ui-button-help ui-button-flat" />
+                        <p:button icon="pi pi-facebook" styleClass="rounded-button ui-button-info ui-button-flat" />
+                        <p:button icon="pi pi-whatsapp" styleClass="rounded-button ui-button-success ui-button-flat" />
+                    </div>
+                </f:facet>
+            </p:menubar>
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Add a new article" icon="pi pi-plus" action="ajout-article-commande.xhtml"
+                                     styleClass="ui-button-outlined ui-button-success" style="margin-right: .5rem">
+                    </p:commandButton>
+
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:commandButton id="delete-articles-button" value="#{delArticleCommandeMBean.deleteButtonMessage}"
+                                     icon="pi pi-trash" actionListener="#{delArticleCommandeMBean.deleteSelectedArticlesCommande}"
+                                     styleClass="ui-button-outlined ui-button-danger" disabled="#{!delArticleCommandeMBean.hasSelectedArticlesCommande()}" update="@this">
+                        <p:confirm header="Confirmation" message="Delete the selected articles?"
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable editable="true" id="dt-articles" widgetVar="dtArticles" var="article" value="#{delArticleCommandeMBean.articlesCommande}"
+                         reflow="true" styleClass="articles-table" selection="#{delArticleCommandeMBean.selectedArticlesCommande}"
+                         rowKey="#{article.ligne}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <p:ajax event="rowEdit" listener="#{modifArticleCommandeMBean.onRowEdit}" update=":form:messages"/>
+                <p:ajax event="rowEditCancel" listener="#{modifArticleCommandeMBean.onRowCancel}" update=":form:messages"/>
+
+                <f:facet name="header">
+                    <div align="right" class="articles-table-header">
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText  id="globalFilter" onkeyup="PF('dtArticles').filter()" placeholder="Search for an article" />
+                    </span>
+                    </div>
+                </f:facet>
+
+                <p:ajax event="rowSelect" update=":form:delete-articles-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-articles-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-articles-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-articles-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-articles-button" />
+
+                <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                <p:column headerText="Line" sortBy="#{article.ligne}" filterBy="#{article.ligne}">
+                    <h:outputText value="#{article.ligne}" />
+                </p:column>
+                <p:column headerText="Order number" sortBy="#{article.numeroCommande.numero}" filterBy="#{article.numeroCommande.numero}">
+                    <h:outputText value="#{article.numeroCommande.numero}" />
+                </p:column>
+
+                <p:column headerText="Price" sortBy="#{article.prixDepart}" filterBy="#{article.prixDepart}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{article.prixDepart}" style="font-weight: 700">
+                                <f:convertNumber currencySymbol="$" type="currency" />
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputNumber value="#{article.prixDepart}" style="width:100%" label="Price" symbol="$"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Discount" sortBy="#{article.remise}" filterBy="#{article.remise}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{article.remise}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{article.remise}" style="width:100%" label="Discount"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Quantity" sortBy="#{article.quantite}" filterBy="#{article.quantite}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{article.quantite}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{article.quantite}" style="width:100%" label="Quantity"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="Product" sortBy="#{article.produitId.nom}" filterBy="#{article.produitId.nom}">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{article.produitId.nom}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu id="produit" value="#{article.produitId}" converter="produitConverter">
+                                <f:selectItems value="#{modifArticleCommandeMBean.produits}" var="produit"
+                                               itemLabel="#{produit.nom}" itemValue="#{produit}"  />
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Actions" >
+                    <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                    <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                     process="@this"
+                                     oncomplete="PF('deleteArticleDialog').show()">
+                        <f:setPropertyActionListener value="#{article}" target="#{delArticleCommandeMBean.selectedArticleCommande}" />
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+        <h:form id="dialogs">
+            <p:confirmDialog widgetVar="deleteArticleDialog" showEffect="fade" width="300"
+                             message="Delete the article?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{delArticleCommandeMBean.deleteArticleCommande()}"
+                                 process="@this" update=":form:delete-articles-button"
+                                 oncomplete="PF('deleteArticleDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteArticleDialog').hide()" />
+            </p:confirmDialog>
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="pi pi-times" />
+            </p:confirmDialog>
+        </h:form>
+    </div>
+
+</h:body>
+</html>

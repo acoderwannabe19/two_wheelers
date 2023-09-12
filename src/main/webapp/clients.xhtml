@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+
+   <style>
+      body {
+         background-color: #000000 ;
+      }
+      .card {
+         background-color: #1b1b1b;
+      }
+   </style>
+
+
+</h:head>
+<h:body>
+   <div class="card crud-demo">
+      <h:form id="form">
+         <p:growl id="messages" showDetail="true" />
+         <p:menubar >
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('accueil.xhtml')}" style="font-weight: bolder; font-size: 24px; margin-right: 25px"  value="TwoWheelers" />
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('produits.xhtml')}" value="Products" icon="pi pi-fw pi-tags"/>
+            <p:submenu label="Stakeholders" icon="pi pi-fw pi-user">
+               <p:menuitem value="Clients" action="#{navigationBean.navigateToAnotherPage('clients.xhtml')}" />
+               <p:menuitem value="Employees" action="#{navigationBean.navigateToAnotherPage('employes.xhtml')}"/>
+            </p:submenu>
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('commandes.xhtml')}" value="Orders" icon="pi pi-fw pi-shopping-cart"/>
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('articles-commande.xhtml')}" value="Articles" icon="pi pi-fw pi-shopping-bag"/>
+            <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-stocks.xhtml')}" value="Stocks" icon="pi pi-fw pi-box"/>
+
+            <p:submenu >
+               <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-marques.xhtml')}" value="Brands" icon="pi pi-fw pi-star-fill"/>
+               <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-categories.xhtml')}" value="Categories" icon="pi pi-fw pi-microsoft"/>
+               <p:menuitem action="#{navigationBean.navigateToAnotherPage('magasins.xhtml')}" value="Stores" icon="pi pi-fw pi-shopping-bag"/>
+            </p:submenu>
+            <p:divider layout="vertical"/>
+
+            <f:facet name="options">
+               <div style="margin-top: 8px">
+                  <div class="ui-input-icon-left mr-2">
+                     <p:graphicImage style="border-radius: 50px;  width: 30px; height: 30px;margin-bottom: 5px" url="https://e0.pxfuel.com/wallpapers/66/901/desktop-wallpaper-fractal-background-abyss-dark-fractal.jpg"></p:graphicImage>
+                  </div>
+
+                  <p:button style="margin-left: 10px;" value="Logout" styleClass="ui-button-outlined ui-button-warning" icon="pi pi-fw pi-sign-out"/>
+                  <p:button icon="pi pi-instagram" styleClass="rounded-button ui-button-help ui-button-flat" />
+                  <p:button icon="pi pi-facebook" styleClass="rounded-button ui-button-info ui-button-flat" />
+                  <p:button icon="pi pi-whatsapp" styleClass="rounded-button ui-button-success ui-button-flat" />
+               </div>
+            </f:facet>
+         </p:menubar>
+
+         <p:toolbar>
+            <p:toolbarGroup>
+               <p:commandButton value="Add a new client" icon="pi pi-plus" action="ajout-client.xhtml"
+                                styleClass="ui-button-outlined ui-button-success" style="margin-right: .5rem">
+               </p:commandButton>
+
+            </p:toolbarGroup>
+            <p:toolbarGroup align="right">
+               <p:commandButton id="delete-clients-button" value="#{delClientMBean.deleteButtonMessage}"
+                                icon="pi pi-trash" actionListener="#{delClientMBean.deleteSelectedClients}"
+                                styleClass="ui-button-outlined ui-button-danger" disabled="#{!delClientMBean.hasSelectedClients()}" update="@this">
+                  <p:confirm header="Confirmation" message="Delete the selected clients?"
+                             icon="pi pi-exclamation-triangle" />
+               </p:commandButton>
+            </p:toolbarGroup>
+         </p:toolbar>
+
+         <p:dataTable editable="true" id="dt-clients" widgetVar="dtClients" var="client" value="#{delClientMBean.clients}"
+                      reflow="true" styleClass="clients-table" selection="#{delClientMBean.selectedClients}"
+                      rowKey="#{client.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+            <p:ajax event="rowEdit" listener="#{modifClientMBean.onRowEdit}" update=":form:messages"/>
+            <p:ajax event="rowEditCancel" listener="#{modifClientMBean.onRowCancel}" update=":form:messages"/>
+
+            <f:facet name="header">
+               <div align="right" class="clients-table-header">
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText  id="globalFilter" onkeyup="PF('dtClients').filter()" placeholder="Search for a client" />
+                    </span>
+               </div>
+            </f:facet>
+
+            <p:ajax event="rowSelect" update=":form:delete-clients-button" />
+            <p:ajax event="rowUnselect" update=":form:delete-clients-button" />
+            <p:ajax event="rowSelectCheckbox" update=":form:delete-clients-button" />
+            <p:ajax event="rowUnselectCheckbox" update=":form:delete-clients-button" />
+            <p:ajax event="toggleSelect" update=":form:delete-clients-button" />
+
+            <p:column selectionMode="multiple" exportable="false"></p:column>
+
+            <p:column headerText="Id" sortBy="#{client.id}" filterBy="#{client.id}">
+               <h:outputText value="#{client.id}" />
+            </p:column>
+            <p:column headerText="First name" sortBy="#{client.prenom}" filterBy="#{client.prenom}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.prenom}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.prenom}" style="width:100%" label="First name"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+            <p:column headerText="Last name" sortBy="#{client.nom}" filterBy="#{client.nom}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.nom}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.nom}" style="width:100%" label="Last name"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+            <p:column headerText="Phone" sortBy="#{client.telephone}" filterBy="#{client.telephone}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.telephone}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.telephone}" style="width:100%" label="Phone"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+            <p:column headerText="Email" sortBy="#{client.email}" filterBy="#{client.email}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.email}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.email}" style="width:100%" label="Email"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+            <p:column headerText="Address" sortBy="#{client.adresse}" filterBy="#{client.adresse}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.adresse}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.adresse}" style="width:100%" label="Address"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+            <p:column headerText="Zip code" sortBy="#{client.codeZip}" filterBy="#{client.codeZip}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.codeZip}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.codeZip}" style="width:100%" label="Zip code"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+            <p:column headerText="State" sortBy="#{client.etat}" filterBy="#{client.etat}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.etat}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.etat}" style="width:100%" label="State"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+            <p:column headerText="City" sortBy="#{client.ville}" filterBy="#{client.ville}">
+               <p:cellEditor>
+                  <f:facet name="output">
+                     <h:outputText value="#{client.ville}"/>
+                  </f:facet>
+                  <f:facet name="input">
+                     <p:inputText value="#{client.ville}" style="width:100%" label="City"/>
+                  </f:facet>
+               </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Actions" >
+               <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+               <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                process="@this"
+                                oncomplete="PF('deleteClientDialog').show()">
+                  <f:setPropertyActionListener value="#{client}" target="#{delClientMBean.selectedClient}" />
+               </p:commandButton>
+            </p:column>
+
+         </p:dataTable>
+      </h:form>
+
+      <h:form id="dialogs">
+         <p:confirmDialog widgetVar="deleteClientDialog" showEffect="fade" width="300"
+                          message="Delete the client?" header="Confirm" severity="warn">
+            <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{delClientMBean.deleteClient()}"
+                             process="@this" update=":form:delete-clients-button"
+                             oncomplete="PF('deleteClientDialog').hide()" />
+            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                             onclick="PF('deleteClientDialog').hide()" />
+         </p:confirmDialog>
+
+         <p:confirmDialog global="true" showEffect="fade" width="300">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                             icon="pi pi-times" />
+         </p:confirmDialog>
+      </h:form>
+   </div>
+
+</h:body>
+</html>
+

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: dell
+  Date: 15/06/2023
+  Time: 21:44
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+</h:head>
+
+<h:body>
+    <f:view>
+        <h:form>
+            <p:menubar >
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('accueil.xhtml')}" style="font-weight: bolder; font-size: 24px; margin-right: 25px"  value="TwoWheelers" />
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('produits.xhtml')}" value="Products" icon="pi pi-fw pi-tags"/>
+                <p:submenu label="Stakeholders" icon="pi pi-fw pi-user">
+                    <p:menuitem value="Clients" action="#{navigationBean.navigateToAnotherPage('clients.xhtml')}" />
+                    <p:menuitem value="Employees" action="#{navigationBean.navigateToAnotherPage('employes.xhtml')}"/>
+                </p:submenu>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('commandes.xhtml')}" value="Orders" icon="pi pi-fw pi-shopping-cart"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('articles-commande.xhtml')}" value="Articles" icon="pi pi-fw pi-shopping-bag"/>
+                <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-stocks.xhtml')}" value="Stocks" icon="pi pi-fw pi-box"/>
+
+                <p:submenu >
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-marques.xhtml')}" value="Brands" icon="pi pi-fw pi-star-fill"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('liste-categories.xhtml')}" value="Categories" icon="pi pi-fw pi-microsoft"/>
+                    <p:menuitem action="#{navigationBean.navigateToAnotherPage('magasins.xhtml')}" value="Stores" icon="pi pi-fw pi-shopping-bag"/>
+                </p:submenu>
+                <p:divider layout="vertical"/>
+
+                <f:facet name="options">
+                    <div style="margin-top: 8px">
+                        <div class="ui-input-icon-left mr-2">
+                            <p:graphicImage style="border-radius: 50px;  width: 30px; height: 30px;margin-bottom: 5px" url="https://e0.pxfuel.com/wallpapers/66/901/desktop-wallpaper-fractal-background-abyss-dark-fractal.jpg"></p:graphicImage>
+                        </div>
+
+                        <p:button style="margin-left: 10px;" value="Logout" styleClass="ui-button-outlined ui-button-warning" icon="pi pi-fw pi-sign-out"/>
+                        <p:button icon="pi pi-instagram" styleClass="rounded-button ui-button-help ui-button-flat" />
+                        <p:button icon="pi pi-facebook" styleClass="rounded-button ui-button-info ui-button-flat" />
+                        <p:button icon="pi pi-whatsapp" styleClass="rounded-button ui-button-success ui-button-flat" />
+                    </div>
+                </f:facet>
+            </p:menubar>
+            <div style="position: relative;">
+            <p:graphicImage url="https://wallpapercave.com/wp/wp3647903.jpg" library="demo" style="width: 100%;" />
+
+            <div align="center" style="position: absolute;
+                top: 35%; left: 50%;
+                transform: translate(-50%, -50%);
+                backdrop-filter: blur(13px);
+                background-color: rgba(200, 200, 200, 0.5);
+                padding: 20px;
+">
+
+            <p:messages/>
+            <h:panelGrid style="margin: 30px;" width="400" cellpadding="10"  columns="6" >
+
+<!--            <p:outputLabel value="Ligne" for="ligne" />-->
+<!--                <p:inputText id="ligne" required="true" value="#{ajoutArticleCommandeMBean.articleCommande.ligne}" />-->
+<!--                <p:message for="ligne" />-->
+
+                <p:outputLabel value="Produit" for="produit" />
+                <p:selectOneMenu id="produit" value="#{ajoutArticleCommandeMBean.selectedProduitId}">
+                    <f:selectItems value="#{ajoutArticleCommandeMBean.produits}" var="produit" itemLabel="#{produit.nom}" itemValue="#{produit.id}" />
+                </p:selectOneMenu>
+                <p:message for="produit" />
+
+                <p:outputLabel value="Quantité" for="quantite" />
+                <p:inputText id="quantite" required="true" value="#{ajoutArticleCommandeMBean.articleCommande.quantite}" />
+                <p:message for="quantite" />
+
+                <p:outputLabel value="Prix de départ" for="prixDepart" />
+                <p:inputText id="prixDepart" required="true" value="#{ajoutArticleCommandeMBean.articleCommande.prixDepart}" />
+                <p:message for="prixDepart" />
+
+                <p:outputLabel value="Remise" for="remise" />
+                <p:inputText id="remise" required="true" value="#{ajoutArticleCommandeMBean.articleCommande.remise}" />
+                <p:message for="remise" />
+
+                <p:outputLabel value="Commande" for="commande" />
+                <p:selectOneMenu id="commande" value="#{ajoutArticleCommandeMBean.selectedCommandeId}">
+                    <f:selectItems value="#{ajoutArticleCommandeMBean.commandes}" var="commande" itemLabel="#{commande.numero}" itemValue="#{commande.numero}" />
+                </p:selectOneMenu>
+                <p:message for="commande" />
+
+                <f:facet name="footer">
+                    <p:commandButton style="margin-left: 200px; margin-right: 60px" ajax="false" styleClass="ui-button-outlined ui-button"  value="Save" action="#{ajoutArticleCommandeMBean.save()}"></p:commandButton>
+                    <p:commandButton styleClass="ui-button-outlined ui-button" value="Cancel" ></p:commandButton>
+                </f:facet>
+                <f:facet name="header">
+                    <h:outputText style="font-size: larger" value="Add an article"></h:outputText>
+                </f:facet>
+            </h:panelGrid>
+            </div>
+        </div>
+        </h:form>
+    </f:view>
+
+</h:body>
+
+</html>
