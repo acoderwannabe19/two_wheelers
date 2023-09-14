@@ -7,6 +7,7 @@ import jakarta.faces.convert.FacesConverter;
 import sn.ept.git.dic2.projetjee.entities.Magasin;
 import sn.ept.git.dic2.projetjee.facades.EmployeFacade;
 
+
 @FacesConverter(value="magasinConverter",forClass = Magasin.class)
 public class MagasinConverter implements Converter {
 

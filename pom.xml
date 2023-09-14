@@ -134,7 +134,7 @@
             <version>1.0.0</version>
         </dependency>
 
-        <!--        <dependency>-->
+<!--                <dependency>-->
 <!--            <groupId>org.eclipse</groupId>-->
 <!--            <artifactId>yasson</artifactId>-->
 <!--            <version>3.0.3</version>-->

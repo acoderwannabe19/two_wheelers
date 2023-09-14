@@ -32,17 +32,17 @@ public class Commande implements Serializable {
     private short statut;
 
     @Temporal(TemporalType.DATE)
-    @JsonbDateFormat(value = "yyyy-MM-dd")
+    @JsonbDateFormat(value="yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 //    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateCommande;
 
     @Temporal(TemporalType.DATE)
-    @JsonbDateFormat(value = "yyyy-MM-dd")
+    @JsonbDateFormat(value="yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 //    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateLivraisonVoulue;
 
     @Temporal(TemporalType.DATE)
-    @JsonbDateFormat(value = "yyyy-MM-dd")
+    @JsonbDateFormat(value="yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 //    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateLivraison;
 

@@ -105,7 +105,6 @@ public class CommandeResource {
     public Response modifCommande(@PathParam("numero") Integer numero, Commande commandeModifiee) {
         // Retrieve the existing product and store (categorie) from the database
         Commande commande = commandeFacade.find(numero);
-//        Client client = clientFacade.find(clientId);
         if (commande == null) {
             ArticleCommandeResponse response = new ArticleCommandeResponse("La commande correspondant est introuvable");
             return Response.status(Response.Status.NOT_FOUND).entity(response).build();
