@@ -21,10 +21,6 @@ import java.util.List;
 public class ProduitResource {
     @EJB
     private ProduitFacade produitFacade;
-    @EJB
-    private MarqueFacade marqueFacade;
-    @EJB
-    private CategorieFacade categorieFacade;
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

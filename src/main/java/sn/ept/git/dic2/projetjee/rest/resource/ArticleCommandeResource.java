@@ -20,12 +20,6 @@ public class ArticleCommandeResource {
     @EJB
     private ArticleCommandeFacade articleCommandeFacade;
 
-    @EJB
-    private CommandeFacade commandeFacade;
-
-    @EJB
-    private ProduitFacade produitFacade;
-
     @GET
     @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
     @Operation(summary = "Liste des articles commandés", description = "Affichage de la liste des articles commandés")

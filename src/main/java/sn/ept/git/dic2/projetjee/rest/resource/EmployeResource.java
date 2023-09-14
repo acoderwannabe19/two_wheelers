@@ -20,7 +20,6 @@ public class EmployeResource {
     @EJB
     private EmployeFacade employeFacade;
 
-
     @GET
     @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
     @Operation(summary = "Liste des employés", description = "Affichage de la liste des employés")
